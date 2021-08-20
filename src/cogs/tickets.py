@@ -44,8 +44,7 @@ class Tickets(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     @commands.command(help='🔒Erstellt ein für alle mal einen "Ticket-erstellen"-Kanal, benötigt entsprechende Berechtigungen.')
     async def ticketsetup(self, ctx, *args):
-        args = ' '.join(args).split('\n')
-        print(args)
+        args = ' '.join(args).strip('\n').split(';')
 
         text = ''
         emoji = ''
@@ -53,12 +52,16 @@ class Tickets(commands.Cog):
         emojis = ''
 
         for arg in args:
-            emoji = arg.split(': ')[0]
-            emojis += emoji
-            topic = arg.split(': ')[1]
+            if arg.strip():
+                arg.strip('\n')
+                print(f'=== {arg} ===')
 
-            topics[emoji] = topic
-            text += f'{emoji}・**{topic}**\n'
+                emoji = arg.split(': ')[0].strip()
+                emojis += emoji
+                topic = arg.split(': ')[1]
+
+                topics[emoji] = topic
+                text += f'{emoji}・**{topic}**\n'
 
         msg = await ctx.send(embed=discord.Embed(title='Support-Themen', description=f'> Wähle hier einfach aus, wobei du Hilfe brauchst!\n\n{text}', color=0xFF4400))
 
